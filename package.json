@@ -27,6 +27,7 @@
     "@openhands/typescript-client": "1.39.0",
     "@react-router/node": "7.18.2",
     "@react-router/serve": "7.18.2",
+    "@supabase/supabase-js": "^2.116.0",
     "@tailwindcss/vite": "4.3.3",
     "@tanstack/react-query": "5.101.4",
     "@types/shell-quote": "1.7.5",

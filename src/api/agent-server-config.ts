@@ -1,3 +1,5 @@
+import { getSupabaseAccessToken } from "#/services/supabase";
+
 export const DEFAULT_WORKING_DIR = "workspace/project";
 
 export type LockedCloudAuthMode = "api-key" | "cookie";
@@ -119,6 +121,9 @@ function getConfiguredBaseUrl(): string | null {
 export function getBakedSessionApiKey(): string | null {
   const envKey = trimToNull(import.meta.env.VITE_SESSION_API_KEY);
   if (envKey) return envKey;
+
+  const supabaseToken = getSupabaseAccessToken();
+  if (supabaseToken) return supabaseToken;
 
   if (typeof window !== "undefined") {
     const injected = (window as unknown as Record<string, unknown>)

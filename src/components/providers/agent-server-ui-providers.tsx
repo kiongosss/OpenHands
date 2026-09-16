@@ -14,6 +14,7 @@ import {
   setI18n,
 } from "#/i18n";
 import { ActiveBackendProvider } from "#/contexts/active-backend-context";
+import { SupabaseAuthProvider } from "#/contexts/supabase-auth-context";
 import type { TelemetryConfig } from "#/services/telemetry";
 import { TelemetryProvider } from "./telemetry-provider";
 import {
@@ -96,7 +97,9 @@ export function AgentServerUIProviders({
         }
       : false;
   const content = (
-    <TelemetryProvider config={posthogConfig}>{children}</TelemetryProvider>
+    <SupabaseAuthProvider>
+      <TelemetryProvider config={posthogConfig}>{children}</TelemetryProvider>
+    </SupabaseAuthProvider>
   );
 
   const wrappedContent = withStyleRoot ? (

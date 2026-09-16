@@ -73,6 +73,10 @@ const ApiKeyEntryScreen = React.lazy(
   () => import("#/components/features/backends/api-key-entry-screen"),
 );
 
+// Rendered when Supabase OAuth is configured and no session exists.
+import SupabaseLoginScreen from "#/components/features/auth/supabase-login-screen";
+import { SupabaseUserPill } from "#/components/features/auth/supabase-user-pill";
+
 // Rendered only for first-run public/frontend-only bootstraps; keep the
 // onboarding flow out of the root bundle until this rare gate is active.
 const OnboardingModal = React.lazy(() =>
@@ -370,7 +374,13 @@ export default function App() {
   // No key at all after onboarding was skipped/completed → auth screen.
   // Stale key → /server_info 401 → auth screen (public mode only).
   if (authMissing || isAgentServerAuthError(config.error)) {
-    return (
+    const isSupabase = Boolean(
+      import.meta.env.VITE_SUPABASE_URL &&
+      import.meta.env.VITE_SUPABASE_ANON_KEY,
+    );
+    return isSupabase ? (
+      <SupabaseLoginScreen />
+    ) : (
       <React.Suspense fallback={<AgentServerBootstrapLoading />}>
         <ApiKeyEntryScreen />
       </React.Suspense>
@@ -391,6 +401,7 @@ export default function App() {
 
   return (
     <>
+      <SupabaseUserPill />
       <Outlet />
       <TelemetryConsentBanner />
     </>
