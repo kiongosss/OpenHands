@@ -397,11 +397,35 @@ export default defineConfig(({ mode }) => {
           target: API_URL,
           changeOrigin: true,
           secure: !INSECURE_SKIP_VERIFY,
+          rewrite: (path) => `/proxy${path}`,
+          configure: (proxy) => {
+            proxy.on("proxyReq", (proxyReq) => {
+              const token = proxyReq.getHeader("X-Session-API-Key") as
+                | string
+                | undefined;
+              if (token && token.startsWith("eyJ")) {
+                proxyReq.setHeader("Authorization", `Bearer ${token}`);
+                proxyReq.removeHeader("X-Session-API-Key");
+              }
+            });
+          },
         },
         "/server_info": {
           target: API_URL,
           changeOrigin: true,
           secure: !INSECURE_SKIP_VERIFY,
+          rewrite: (path) => `/proxy${path}`,
+          configure: (proxy) => {
+            proxy.on("proxyReq", (proxyReq) => {
+              const token = proxyReq.getHeader("X-Session-API-Key") as
+                | string
+                | undefined;
+              if (token && token.startsWith("eyJ")) {
+                proxyReq.setHeader("Authorization", `Bearer ${token}`);
+                proxyReq.removeHeader("X-Session-API-Key");
+              }
+            });
+          },
         },
         "/alive": {
           target: API_URL,
